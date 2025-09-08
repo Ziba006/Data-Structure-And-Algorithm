@@ -1,0 +1,87 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct Node{
+    int data;
+    struct Node*next;
+};
+
+void Linkedlist_Traversal(struct Node*ptr){
+    while(ptr != NULL){
+        printf("Element: %d\n", ptr->data);
+        ptr = ptr->next;
+    }
+}
+
+//CASE1: Deletion at Beginning
+struct Node*DeleteAtBeginning(struct Node*head){
+    struct Node*ptr = head;
+    head = head->next;
+    free(ptr);
+    return head;
+};
+
+// CASE2: Deletion at index
+struct Node*DeleteAtIndex(struct Node*head, int Index){
+    struct Node*p = head;
+    struct Node*q = head->next;
+    for(int i = 0; i<Index-1; i++){
+        p=p->next;
+        q=q->next;
+    }
+    p->next = q->next;
+    free(q);
+    return head;
+};
+
+// CASE3: Insertion at End
+struct Node*DeleteAtEnd(struct Node*head){
+    struct Node*p = head;
+    struct Node*q = head->next;
+    while(q->next != NULL){
+        p = p->next;
+        q = q->next;
+    }
+    p->next = NULL;
+    free(q);
+    return head;
+};
+
+int main(){
+    int i,n, value;
+    struct Node*head = NULL, *temp = NULL, *newNode = NULL;
+
+    printf("Enter the number of nodes: \n");
+    scanf("%d",&n);
+
+    for(i=0; i< n; i++){
+        newNode = (struct Node*)malloc(sizeof(struct Node));
+        if(newNode == NULL){
+            printf("Memory allocation failed!\n");
+        }
+    
+        printf("Enter value for node %d: ", i + 1);
+            scanf("%d", &value);
+            newNode->data = value;
+            newNode->next = NULL;
+
+        if(head == NULL){
+            head = newNode;
+            temp = head;
+        }
+        else{
+            temp->next = newNode;
+            temp = temp->next;
+        }
+    }
+    printf("\nLinked List elements:\n");
+    Linkedlist_Traversal(head);
+
+    // head = DeleteAtBeginning(head);
+    head  = DeleteAtIndex(head,2);
+    // head  = DeleteAtEnd(head);
+    printf("Linked list after Deletion\n");
+    Linkedlist_Traversal(head);
+
+    return 0;
+}
