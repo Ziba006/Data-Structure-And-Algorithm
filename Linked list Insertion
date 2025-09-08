@@ -1,0 +1,91 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct Node{
+    int data;
+    struct Node*next;
+};
+
+void Linkedlist_Traversal(struct Node*ptr){
+    while(ptr != NULL){
+        printf("Element: %d\n", ptr->data);
+        ptr = ptr->next;
+    }
+}
+
+//CASE1: Insertion at Beginning
+struct Node*InsertAtBeginning(struct Node*head, int data){
+    struct Node*ptr = (struct Node*)malloc(sizeof(struct Node));
+    ptr->data = data;
+    ptr->next = head;
+    return ptr;
+};
+
+// CASE2: Insertion at index
+struct Node*InsertAtIndex(struct Node*head, int data, int Index){
+    struct Node*ptr = (struct Node*)malloc(sizeof(struct Node));
+    struct Node*p = head;
+    int i = 0;
+    while(i != Index-1){
+        p=p->next;
+        i++;
+    }
+
+    ptr->data = data;
+    ptr->next = p->next;
+    p->next = ptr;
+    return head;
+};
+
+// CASE3: Insertion at End
+struct Node*InsertAtEnd(struct Node*head, int data){
+    struct Node*ptr = (struct Node*)malloc(sizeof(struct Node));
+    struct Node*p = head;
+    while(p->next != NULL){
+        p = p->next;
+    }
+    p->next = ptr;
+    ptr->next = NULL;
+    ptr->data = data;
+   
+    return head;
+};
+
+int main(){
+    int i,n, value;
+    struct Node*head = NULL, *temp = NULL, *newNode = NULL;
+
+    printf("Enter the number of nodes: \n");
+    scanf("%d",&n);
+
+    for(i=0; i< n; i++){
+        newNode = (struct Node*)malloc(sizeof(struct Node));
+        if(newNode == NULL){
+            printf("Memory allocation failed!\n");
+        }
+    
+        printf("Enter value for node %d: ", i + 1);
+            scanf("%d", &value);
+            newNode->data = value;
+            newNode->next = NULL;
+
+        if(head == NULL){
+            head = newNode;
+            temp = head;
+        }
+        else{
+            temp->next = newNode;
+            temp = temp->next;
+        }
+    }
+    printf("\nLinked List elements:\n");
+    Linkedlist_Traversal(head);
+
+    head = InsertAtBeginning(head, 56);
+    head = InsertAtIndex(head, 79, 4);
+    head = InsertAtEnd(head, 45);
+    printf("Linked list after Insertion\n");
+    Linkedlist_Traversal(head);
+
+    return 0;
+}
