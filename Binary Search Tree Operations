@@ -1,0 +1,150 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+    int data;
+    struct node*right;
+    struct node*left;
+};
+
+struct node*CreateNode(int data){
+    struct node*n = (struct node*)malloc(sizeof(struct node));
+    n->data = data;
+    n->left = NULL;
+    n->right = NULL;
+    return n;
+};
+
+// INORDER TRAVERSING
+void InOrder(struct node*root){
+    if(root != NULL){
+        InOrder(root->left);
+        printf("%d ",root->data);
+        InOrder(root->right);
+    }
+}
+
+int isBST(struct node*root){
+    static struct node*prev = NULL;
+    if(root != NULL){
+        if(!isBST(root->left)){
+            return 0;
+        }
+        if(prev != NULL && root->data <=prev->data){
+            return 0;
+        }
+        prev = root;
+        return isBST(root->right);
+    }
+    else{
+        return 1;
+    }
+}
+
+// SEARCH OPERATION
+struct node*search(struct node*root, int key){
+    while(root != NULL){
+        if(key == root->data){
+            return root;
+        }
+        else if(key < root->data){
+            root = root->left;
+        }
+        else{
+            root = root->right;
+        }
+    }
+    return NULL;
+}
+
+// INSERT OPERATION
+struct node*insert(struct node*root, int key){
+    struct node*prev = NULL;
+    while(root != NULL){
+        prev= root;
+        if(key == root->data){
+            printf("Cannot insert %d . Already in the BST", key);
+            return root;
+        }
+        else if(key < root->data){
+            root = root->left;
+        }
+        else{
+            root = root->right;
+        }
+    }
+    struct node*new  = CreateNode(key);
+    if(key<prev->data){
+        prev->left = new;
+    }
+    else{
+        prev->right = new;
+    }
+}
+
+// DELETE OPERATION - by deleting a node the tree can break so inoder predessor/successor is used
+struct node*InorderPredecessor(struct node*root){
+    root = root->left;                //move to the left child
+    while(root->right != NULL){       //the go as far right as possible
+        root = root->right;
+    }
+    return root;                      // give the largest node( right leaf node)
+};
+
+struct node*deleteNode(struct node*root, int value){
+    struct node * iPre;
+    if(root == NULL){
+        return NULL;
+    }
+    else if(value == root->data){
+        if(root->left == NULL && root->right == NULL){
+            free(root);
+            return NULL;
+        }
+    }
+    if(value < root->data){
+        root->left = deleteNode(root->left, value);
+    }
+    else if(value > root->data){
+        root->right = deleteNode(root->right, value);
+    }
+    else{
+        iPre = InorderPredecessor(root);
+        root->data = iPre->data;
+        root->left = deleteNode(root->left, iPre->data);
+    }
+    return root;
+};
+
+int main(){
+    struct node*p = CreateNode(9);
+    struct node*p1 = CreateNode(5);
+    struct node*p2 = CreateNode(10);
+    struct node*p3 = CreateNode(2);
+    struct node*p4 = CreateNode(8);
+
+    p->left = p1;
+    p->right = p2;
+    p1->left = p3;                                                    
+
+    p1 ->right = p4;
+
+    struct node*n = search(p,10);
+    if(n != NULL){
+        printf("Found : %d\n", n->data);
+    }
+    else{
+        printf("Element not found!");
+    }
+
+    insert(p,3);
+    printf("Tree after insertion: ");
+    InOrder(p);
+    printf("\n");
+
+    deleteNode(p,8);
+    printf("Tree after deletion: ");
+    InOrder(p);
+
+    return 0;
+}
