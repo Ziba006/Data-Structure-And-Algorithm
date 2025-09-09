@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct Node{
+    int data;
+    struct Node*next;
+};
+
+// void Linkedlist_Traversal(struct Node*ptr){
+    // while(ptr != NULL){
+    //     printf("Element: %d\n", ptr->data);
+    //     ptr = ptr->next;
+    // }                      
+    //  will give an infinite loop
+// }
+
+    void CircularTraversal(struct Node* head) {
+    if (head == NULL) return;   // empty list check
+    struct Node* ptr = head;
+
+    do {
+        printf("Element: %d\n", ptr->data);
+        ptr = ptr->next;
+    } while (ptr != head);  // stop when we reach head again
+}
+
+
+int main(){
+    struct Node*head;
+    struct Node*second;
+    struct Node*third;
+    struct Node*fourth;
+
+    head = (struct Node*)malloc(sizeof(struct Node));
+    second = (struct Node*)malloc(sizeof(struct Node));
+    third= (struct Node*)malloc(sizeof(struct Node));
+    fourth= (struct Node*)malloc(sizeof(struct Node));
+
+    head->data = 12;
+    head->next = second;
+    second->data = 13;
+    second->next = third;
+    third->data = 80;
+    third->next = fourth;
+    fourth->data = 100;
+    fourth->next = head;
+    CircularTraversal(head);
+    return 0;
+
+}
+
+// int main(){
+//     int i,n, value;
+//     struct Node*head = NULL, *temp = NULL, *newNode = NULL;
+
+//     printf("Enter the number of nodes: \n");
+//     scanf("%d",&n);
+
+//     for(i=0; i< n; i++){
+//         newNode = (struct Node*)malloc(sizeof(struct Node));
+//         if(newNode == NULL){
+//             printf("Memory allocation failed!\n");
+//         }
+    
+//         printf("Enter value for node %d: ", i + 1);
+//             scanf("%d", &value);
+//             newNode->data = value;
+//             newNode->next = NULL;
+
+//         if(head == NULL){
+//             head = newNode;
+//             temp = head;
+//         }
+//         else{
+//             temp->next = newNode;
+//             temp = temp->next;
+//         }
+//     }
+
+//     temp->next = head;
+
+//     printf("\nLinked List elements:\n");
+//     CircularTraversal(head);
+
+//     return 0;
+// }
